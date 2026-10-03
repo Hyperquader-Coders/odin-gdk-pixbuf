@@ -1,0 +1,92 @@
+---
+# Adapted from odin-gtk (MIT, docs/LICENSE-odin-gtk.md).
+version: 0
+platforms:
+  - Linux x86_64
+from:
+  language: c
+  shared.linux: 'libgdk_pixbuf-2.0.so'
+  headers: ../build/sys/usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf.h
+  includedirs:
+    - ../stdinc/
+    - ../build/sys/usr/include/gdk-pixbuf-2.0/
+    - ../build/sys/usr/include/glib-2.0/
+    - ../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/
+  defines:
+    GLIB_DISABLE_DEPRECATION_WARNINGS: 1
+  load_all_includes: true
+  extern:
+    - "../stdinc/*"
+    - "../stdinc/sys/*"
+    - "../build/sys/usr/include/glib-2.0/glib/*"
+    - "../build/sys/usr/include/glib-2.0/glib/deprecated/*"
+    - "../build/sys/usr/include/glib-2.0/gobject/*"
+    - "../build/sys/usr/include/glib-2.0/gio/*"
+    - "../build/sys/usr/include/glib-2.0/gmodule/*"
+    - "../build/sys/usr/include/glib-2.0/*.h"
+    - "../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/*"
+  ignore:
+    types:
+      - va_list
+      - '*autoptr*'
+    constants:
+      - 'GDK_PIXBUF_VERSION*'
+      - 'GDK_PIXBUF_VAR'
+      - 'GDK_PIXBUF_DEPRECATED*'
+      - 'GDK_PIXBUF_AVAILABLE*'
+      - '_GDK*'
+    functions:
+      - '*autoptr*'
+      - '*auto_cleanup*'
+  aliases:
+    'gdk_pixbuf_save_utf8': 'gdk_pixbuf_save'
+to:
+  language: odin
+  package: gdkpixbuf
+  out: gdkpixbuf.odin
+  no_build_tag: true
+  trim_prefix:
+    types:
+      - Gdk
+      - g
+      - G
+    constants:
+      - GDK_PIXBUF_
+      - GDK_
+      - ALPHA_
+      - COLORSPACE_
+      - ERROR_
+      - INTERP_
+      - ROTATE_
+    functions:
+      - gdk_
+      - glib_
+    variables:
+      - gdk_
+  enum_type_name: true
+  extern:
+    sources:
+      "../stdinc/stdarg.h": "core:c/libc"
+      "../stdinc/pthread.h": "core:c/libc"
+      "../stdinc/sys/types.h": "core:sys/linux"
+      "../build/sys/usr/include/glib-2.0/glib/*": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/glib.h": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/glib/deprecated/*": "glib glib:glib"
+      "../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/*": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/gobject/*": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/glib-object.h": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/gio/*": "gio glib:gio"
+      "../build/sys/usr/include/glib-2.0/gmodule/*": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/gmodule.h": "gobj glib:gobject"
+    remaps:
+      pid_t: Pid
+      uid_t: Uid
+    trim_prefix: true
+  detect:
+    parameters: declared
+    arrays:
+      pixbuf_savev: [option_keys, option_values]
+      pixbuf_save_to_callbackv: [option_keys, option_values]
+      pixbuf_save_to_bufferv: [option_keys, option_values]
+      pixbuf_save_to_streamv_async: [option_keys, option_values]
+      pixbuf_save_to_streamv: [option_keys, option_values]
