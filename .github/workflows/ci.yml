@@ -1,0 +1,36 @@
+# `make ci` is the whole gate: the same steps, in the same order.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# The jobs only read the repository.
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    # Sibling bindings are checked out inside the workspace, not beside it as on a dev machine.
+    env:
+      GLIB: odin-glib
+    steps:
+      - uses: actions/checkout@v4
+
+      # Public sibling binding.
+      - name: odin-glib
+        uses: actions/checkout@v4
+        with:
+          repository: Hyperquader-Coders/odin-glib
+          path: odin-glib
+
+      - name: system packages
+        run: sudo apt-get update && sudo apt-get install -y libgdk-pixbuf-2.0-dev pkg-config shellcheck
+
+      - uses: Hyperquader-Coders/setup-amber-odin@v1
+
+      - name: make ci
+        run: make ci
