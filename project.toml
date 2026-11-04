@@ -1,0 +1,34 @@
+# What odin-gdk-pixbuf is and needs: build is what a program on it needs, test what only its own
+# tests and checks need. house-rules docs/PROJECT_TOML.md has the layout.
+[project]
+schema = "amber-project-1"
+name = "odin-gdk-pixbuf"
+license = "LGPL-2.1-or-later"
+kind = "binding"
+summary = "Odin bindings for gdk-pixbuf, generated with runic"
+tags = [
+  "ai-assisted",
+  "bindings",
+  "gdk-pixbuf",
+  "linux",
+  "odin",
+  "runic",
+]
+collection = "pixbuf"
+
+[siblings.AMBER_ROOT]
+odin-glib = "https://github.com/Hyperquader-Coders/odin-glib"
+
+[build]
+packages = [
+  "libgdk-pixbuf-2.0-dev",
+]
+lib = [
+  "gdkpixbuf",
+]
+
+[test]
+packages = [
+  "shellcheck",
+  "shfmt",
+]
